@@ -57,7 +57,6 @@ class LinuxDoBrowser:
             return
         self.click_topic()
         self.print_connect_info()
-        self.send_wecom_msg("Github action linuxdo签到完成", )
 
     def click_like(self, page):
         page.locator(".discourse-reactions-reaction-button").first.click()
@@ -79,7 +78,9 @@ class LinuxDoBrowser:
                 info.append([project, current, requirement])
 
         print("--------------Connect Info-----------------")
-        print(tabulate(info, headers=["项目", "当前", "要求"], tablefmt="pretty"))
+        sumary=tabulate(info, headers=["项目", "当前", "要求"], tablefmt="pretty")
+        print(sumary)
+        self.send_wecom_msg(sumary)
 
         page.close()
 
