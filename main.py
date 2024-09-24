@@ -2,7 +2,7 @@ import os
 import time
 import random
 import requests
-import datetime.datetime
+from datetime import datetime
 import json
 
 from tabulate import tabulate
