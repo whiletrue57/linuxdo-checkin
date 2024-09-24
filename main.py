@@ -3,6 +3,7 @@ import time
 import random
 import requests
 import datetime.datetime
+import json
 
 from tabulate import tabulate
 from playwright.sync_api import sync_playwright
