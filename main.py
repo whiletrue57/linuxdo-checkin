@@ -1,6 +1,7 @@
 import os
 import time
 import random
+import requests
 
 from tabulate import tabulate
 from playwright.sync_api import sync_playwright
@@ -11,6 +12,7 @@ PASSWORD = os.environ.get("PASSWORD")
 
 
 HOME_URL = "https://linux.do/"
+webhook_url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a2e7817c-baf3-4773-a734-c38d9e5c71bc"
 
 
 class LinuxDoBrowser:
@@ -53,6 +55,7 @@ class LinuxDoBrowser:
             return
         self.click_topic()
         self.print_connect_info()
+        self.send_wecom_msg("Github action linuxdo签到完成", )
 
     def click_like(self, page):
         page.locator(".discourse-reactions-reaction-button").first.click()
@@ -78,6 +81,25 @@ class LinuxDoBrowser:
 
         page.close()
 
+    def send_wecom_msg(self, content, webhook_url=webhook_url):
+        if not webhook_url:
+            print('未配置wecom_webhook_url，不发送信息')
+            return
+        if not content:
+            print('未配置content，不发送信息')
+            return
+        try:
+            data = {
+                "msgtype": "text",
+                "text": {
+                    "content": content + '\n服务器时间' + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
+            r = requests.post(webhook_url, data=json.dumps(data), timeout=10)
+            print(f'调用企业微信接口返回： {r.text}')
+            print('成功发送企业微信')
+        except Exception as e:
+            print(e, '发送企业微信失败')
 
 if __name__ == "__main__":
     if not USERNAME or not PASSWORD:
